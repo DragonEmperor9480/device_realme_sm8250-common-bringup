@@ -38,20 +38,9 @@ void OverrideProperty(const char* name, const char* value) {
  * after the original property has been set.
  */
 void vendor_load_properties() {
-    auto device = GetProperty("ro.product.product.device", "");
     auto rf_version = std::stoi(GetProperty("ro.boot.rf_version", "0"));
 
-    switch (rf_version) {
-        case 11: // CN
-            if (device == "Realme GT Neo 3T") {
-                OverrideProperty("ro.product.product.device", "RMX3371");
-            }
-            break;
-        default:
-            LOG(ERROR) << "Unexpected RF version: " << rf_version;
-    }
-
-    if (std::string content; ReadFileToString("/proc/devinfo/ddr_type", &content)) {
-        OverrideProperty("ro.boot.ddr_type", Split(Trim(content), "\t").back().c_str());
+    if (rf_version != 1){
+        OverrideProperty("ro.boot.product.hardware.sku", "nfc");
     }
 }
